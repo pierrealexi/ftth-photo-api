@@ -1,0 +1,21 @@
+{# templates/admin/login.html.twig #}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Login</title>
+</head>
+<body>
+    <h1>Connexion</h1>
+
+    {% if error %}
+        <div>{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+    {% endif %}
+
+    <form action="{{ path('admin_login') }}" method="post">
+        <label>Email: <input type="text" name="email" value="{{ last_username }}"></label>
+        <label>Mot de passe: <input type="password" name="password"></label>
+        <button type="submit">Connexion</button>
+    </form>
+</body>
+</html>

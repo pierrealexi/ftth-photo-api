@@ -1,0 +1,49 @@
+# config/packages/security.yaml
+security:
+    password_hashers:
+        App\Entity\User: 'auto'
+
+    providers:
+        app_user_provider:
+            entity:
+                class: App\Entity\User
+                property: email
+
+    firewalls:
+        admin:
+            pattern: ^/admin
+            form_login:
+                login_path: /admin/login 
+                check_path: /admin/login 
+                username_parameter: email 
+                password_parameter: password 
+                default_target_path: /admin 
+                use_referer: true 
+            logout:
+                path: /admin/logout
+                target: /admin/login
+
+        dev:
+            pattern: ^/(_profiler|_wdt|assets|build)/
+            security: false
+
+        login:
+            pattern: ^/api/login
+            stateless: true
+            json_login:
+                check_path: /api/login
+                username_path: email
+                password_path: password
+                success_handler: lexik_jwt_authentication.handler.authentication_success
+                failure_handler: lexik_jwt_authentication.handler.authentication_failure
+
+        api:
+            pattern: ^/api
+            stateless: true
+            jwt: ~
+
+    access_control:
+        - { path: ^/api/login, roles: PUBLIC_ACCESS }
+        - { path: ^/api, roles: IS_AUTHENTICATED_FULLY }
+        - { path: ^/admin/login$, roles: PUBLIC_ACCESS }
+        - { path: ^/admin, roles: ROLE_ADMIN }
